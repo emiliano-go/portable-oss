@@ -1,11 +1,11 @@
-# oss-portfolio
+# portable-oss
 
 Config-driven dashboard for your open source projects. Every page, group, org,
 project, stat, link and theme is generated from a single `oss.config.toml`.
 
 Built with **Astro 6 + Tailwind 4 + `@astrojs/node`**. Live stats (stars, forks,
 releases, last commit, contributors, package downloads) are fetched server-side
-through one cached `/api/stats` endpoint — no build-time bake, no tokens in the
+through one cached `/api/stats` endpoint: no build-time bake, no tokens in the
 browser.
 
 ## Features
@@ -23,8 +23,8 @@ browser.
 - **Theme system**: `portfolio`, `terminal` and `paper` themes, five accent
   palettes, dark/light/auto mode, optional in-page switcher, persisted in
   `localStorage`; high-contrast and large-font accessibility modes.
-- **Graceful degradation**: failed providers return `null`, cards show config
-  `fallback` values or an em-dash, and errors are listed in `errors[]`.
+- **Graceful degradation**: failed providers return `null`; cards show config
+  `fallback` values or a placeholder; errors are listed in `errors[]`.
 - **Deploy-ready**: Docker image, GHCR push on push, non-root runtime.
 
 ## Use this template
@@ -32,11 +32,11 @@ browser.
 Click **Use this template** on GitHub, or:
 
 ```bash
-gh repo create my-dashboard --public --template emiliano-go/oss-portfolio
+gh repo create my-dashboard --public --template emiliano-go/portable-oss
 cd my-dashboard
 ```
 
-Then edit `oss.config.toml` (the sample ships with real projects — replace
+Then edit `oss.config.toml` (the sample ships with real projects; replace
 them), set your theme, and optionally add a `KATIB_GITHUB_TOKEN`.
 
 ## Quickstart
@@ -54,7 +54,7 @@ the profile cards.
 
 ## Configuration
 
-`oss.config.toml` is validated at build time with Zod — a typo fails
+`oss.config.toml` is validated at build time with Zod; a typo fails
 `npm run build` with a readable `[oss.config.toml]` error.
 
 ```toml
@@ -134,12 +134,12 @@ JSON payload with an in-memory cache (`cache_minutes`, package stats cached for
 
 The included GitHub Actions workflow builds and pushes
 `ghcr.io/<owner>/<repo>:latest` on every push to `master` or `main`.
-`KATIB_GITHUB_TOKEN` is a **runtime** secret — never a build arg and never
-baked into the image:
+`KATIB_GITHUB_TOKEN` is a **runtime** secret: never a build arg and never baked
+into the image:
 
 ```yaml
 services:
-  oss-portfolio:
+  portable-oss:
     image: ghcr.io/you/my-dashboard:latest
     environment:
       KATIB_GITHUB_TOKEN: ${KATIB_GITHUB_TOKEN}
@@ -152,8 +152,8 @@ services:
 Or build locally:
 
 ```bash
-docker build -t oss-portfolio .
-docker run -p 8080:80 -e KATIB_GITHUB_TOKEN=ghp_... oss-portfolio
+docker build -t portable-oss .
+docker run -p 8080:80 -e KATIB_GITHUB_TOKEN=ghp_... portable-oss
 ```
 
 ## Scripts
