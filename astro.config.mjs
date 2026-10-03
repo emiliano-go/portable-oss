@@ -1,7 +1,7 @@
 // @ts-check
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
+import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import { parse } from 'smol-toml';
 
@@ -12,7 +12,8 @@ const tailwind = tailwindcss();
 function siteUrl() {
   try {
     const raw = readFileSync(new URL('./oss.config.toml', import.meta.url), 'utf-8');
-    return parse(raw).site?.url ?? 'http://localhost:4321';
+    const parsed = /** @type {{ site?: { url?: string } }} */ (parse(raw));
+    return parsed.site?.url ?? 'http://localhost:4321';
   } catch {
     return 'http://localhost:4321';
   }
@@ -22,12 +23,15 @@ function siteUrl() {
 export default defineConfig({
   site: siteUrl(),
   output: 'static',
-  adapter: node({ mode: 'standalone' }),
+  adapter: cloudflare(),
   vite: {
     // @ts-expect-error -- @tailwindcss/vite bundles its own vite types
     plugins: [tailwind],
     build: {
       cssMinify: 'lightningcss',
+      // Cloudflare's Vite plugin targets es2024, which this Vite release cannot
+      // translate to lightningcss targets. Pin the CSS target explicitly.
+      cssTarget: ['chrome107', 'edge107', 'firefox104', 'safari16'],
     },
   },
 });

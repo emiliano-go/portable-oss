@@ -80,7 +80,7 @@ export function packageEndpoints(registry: Registry, name: string): PackageEndpo
       return {
         downloads: `https://crates.io/api/v1/crates/${name}`,
         version: `https://crates.io/api/v1/crates/${name}`,
-        headers: { 'User-Agent': 'foss.emiliano-go.com' },
+        headers: { 'User-Agent': 'portable-oss' },
       };
     case 'dockerhub':
       return {

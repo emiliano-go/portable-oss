@@ -1,9 +1,0 @@
-node_modules
-dist
-.astro
-.git
-.github
-.env
-.env.*
-!/.env.example
-*.md

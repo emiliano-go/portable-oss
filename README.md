@@ -3,10 +3,10 @@
 Config-driven dashboard for your open source projects. Every page, group, org,
 project, stat, link and theme is generated from a single `oss.config.toml`.
 
-Built with **Astro 6 + Tailwind 4 + `@astrojs/node`**. Live stats (stars, forks,
-releases, last commit, contributors, package downloads) are fetched server-side
-through one cached `/api/stats` endpoint: no build-time bake, no tokens in the
-browser.
+Built with **Astro 6 + Tailwind 4 + `@astrojs/cloudflare`**. Live stats (stars,
+forks, releases, last commit, contributors, package downloads) are fetched
+server-side through one cached `/api/stats` endpoint: no build-time bake, no
+tokens in the browser.
 
 ## Features
 
@@ -25,7 +25,8 @@ browser.
   `localStorage`; high-contrast and large-font accessibility modes.
 - **Graceful degradation**: failed providers return `null`; cards show config
   `fallback` values or a placeholder; errors are listed in `errors[]`.
-- **Deploy-ready**: Docker image, GHCR push on push, non-root runtime.
+- **Deploy-ready**: Cloudflare Workers with static assets; one `wrangler deploy`
+  ships pages and the live stats endpoint together.
 
 ## Use this template
 
@@ -36,15 +37,15 @@ gh repo create my-dashboard --public --template emiliano-go/portable-oss
 cd my-dashboard
 ```
 
-Then edit `oss.config.toml` (the sample ships with real projects; replace
-them), set your theme, and optionally add a `KATIB_GITHUB_TOKEN`.
+Then edit `oss.config.toml` (it ships with one placeholder project; replace
+it), set your theme, and optionally add a `KATIB_GITHUB_TOKEN`.
 
 ## Quickstart
 
 ```bash
-cp .env.example .env      # then put your GitHub token in it
+cp .dev.vars.example .dev.vars   # then put your GitHub token in it
 npm install
-npm run dev               # http://localhost:4321
+npm run dev                      # http://localhost:4321
 ```
 
 The token is optional but strongly recommended: without it katib returns 401
@@ -332,37 +333,31 @@ JSON payload with an in-memory cache (`cache_minutes`, package stats cached for
 
 ## Deploy
 
-The included GitHub Actions workflow builds and pushes
-`ghcr.io/<owner>/<repo>:latest` on every push to `master` or `main`.
-`KATIB_GITHUB_TOKEN` is a **runtime** secret: never a build arg and never baked
-into the image:
-
-```yaml
-services:
-  portable-oss:
-    image: ghcr.io/you/my-dashboard:latest
-    environment:
-      KATIB_GITHUB_TOKEN: ${KATIB_GITHUB_TOKEN}
-      PORT: 80
-    ports:
-      - "8080:80"
-    restart: unless-stopped
-```
-
-Or build locally:
+The template targets **Cloudflare Workers**. `wrangler.jsonc` is committed, so
+deploying is:
 
 ```bash
-docker build -t portable-oss .
-docker run -p 8080:80 -e KATIB_GITHUB_TOKEN=ghp_... portable-oss
+npm run build
+npx wrangler deploy
 ```
+
+`KATIB_GITHUB_TOKEN` is a **runtime** secret: set it once per environment with
+`npx wrangler secret put KATIB_GITHUB_TOKEN`. It is never baked into the build
+and never reaches the browser. Without it the site still renders; live cards
+fall back to config values.
+
+To deploy on push, connect the repository in the Cloudflare dashboard
+(**Workers & Pages → Create → Import a repository**) with build command
+`npm run build` and deploy command `npx wrangler deploy`.
 
 ## Scripts
 
 | Script | Purpose |
 |---|---|
-| `npm run dev` | Dev server at `localhost:4321` |
-| `npm run build` | Validate config + generate static pages and the server entry |
-| `npm run preview` | Run the built server (loads `.env` if present) |
+| `npm run dev` | Dev server at `localhost:4321` (workerd) |
+| `npm run build` | Validate config + generate static pages and the worker |
+| `npm run preview` | Preview the built worker locally via workerd |
+| `npm run deploy` | `wrangler deploy` (build first) |
 | `npm run check` | `astro check` |
 | `npm test` | `node --test` for registry inference and formatting |
 

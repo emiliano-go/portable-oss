@@ -13,14 +13,14 @@ test('inferRegistry maps known registries', () => {
   assert.equal(inferRegistry('https://pypi.org/project/vigil/'), 'pypi');
   assert.equal(inferRegistry('https://www.npmjs.com/package/@scope/name'), 'npm');
   assert.equal(inferRegistry('https://crates.io/crates/serde'), 'crates');
-  assert.equal(inferRegistry('https://github.com/emiliano-go/vigil/releases'), 'github');
-  assert.equal(inferRegistry('https://hub.docker.com/r/emiliano/go'), 'dockerhub');
-  assert.equal(inferRegistry('https://ghcr.io/emiliano-go/vigil'), 'ghcr');
+  assert.equal(inferRegistry('https://github.com/jane-doe/example/releases'), 'github');
+  assert.equal(inferRegistry('https://hub.docker.com/r/jane/example'), 'dockerhub');
+  assert.equal(inferRegistry('https://ghcr.io/jane-doe/example'), 'ghcr');
 });
 
 test('inferRegistry rejects unknown hosts and invalid urls', () => {
   assert.equal(inferRegistry('https://example.com/pkg'), null);
-  assert.equal(inferRegistry('https://github.com/emiliano-go/vigil'), null);
+  assert.equal(inferRegistry('https://github.com/jane-doe/example'), null);
   assert.equal(inferRegistry('not a url'), null);
 });
 
@@ -28,9 +28,9 @@ test('inferPackageName extracts names from each registry url', () => {
   assert.equal(inferPackageName('https://pypi.org/project/seoslug/', 'pypi'), 'seoslug');
   assert.equal(inferPackageName('https://www.npmjs.com/package/@scope/name', 'npm'), '@scope/name');
   assert.equal(inferPackageName('https://crates.io/crates/serde', 'crates'), 'serde');
-  assert.equal(inferPackageName('https://github.com/emiliano-go/vigil/releases', 'github'), 'emiliano-go/vigil');
-  assert.equal(inferPackageName('https://hub.docker.com/r/emiliano/go', 'dockerhub'), 'emiliano/go');
-  assert.equal(inferPackageName('https://ghcr.io/emiliano-go/vigil', 'ghcr'), 'emiliano-go/vigil');
+  assert.equal(inferPackageName('https://github.com/jane-doe/example/releases', 'github'), 'jane-doe/example');
+  assert.equal(inferPackageName('https://hub.docker.com/r/jane/example', 'dockerhub'), 'jane/example');
+  assert.equal(inferPackageName('https://ghcr.io/jane-doe/example', 'ghcr'), 'jane-doe/example');
 });
 
 test('extractDownloads reads each registry payload', () => {
@@ -56,5 +56,5 @@ test('packageEndpoints targets the right hosts', () => {
   assert.match(packageEndpoints('pypi', 'seoslug').downloads ?? '', /pypistats\.org/);
   assert.match(packageEndpoints('npm', 'left-pad').version ?? '', /registry\.npmjs\.org/);
   assert.match(packageEndpoints('crates', 'serde').downloads ?? '', /crates\.io/);
-  assert.equal(packageEndpoints('ghcr', 'emiliano-go/vigil').downloads, null);
+  assert.equal(packageEndpoints('ghcr', 'jane-doe/example').downloads, null);
 });

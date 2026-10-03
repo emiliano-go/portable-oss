@@ -112,7 +112,7 @@ function getToken(): string {
 function githubHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     accept: 'application/vnd.github+json',
-    'user-agent': 'foss.emiliano-go.com',
+    'user-agent': 'portable-oss',
   };
   const token = getToken();
   if (token) headers.authorization = `Bearer ${token}`;
@@ -122,7 +122,7 @@ function githubHeaders(): Record<string, string> {
 function katibHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     accept: 'application/json',
-    'user-agent': 'foss.emiliano-go.com',
+    'user-agent': 'portable-oss',
   };
   const token = getToken();
   if (token) headers.authorization = `Bearer ${token}`;
