@@ -1,0 +1,22 @@
+---
+import LiveBlock from './LiveBlock.astro';
+
+export interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<LiveBlock path={path}>
+  <div class="flex flex-wrap gap-x-5 gap-y-3">
+    {Array.from({ length: 6 }).map(() => (
+      <div class="flex items-center gap-2">
+        <span class="skeleton h-6 w-6"></span>
+        <span class="space-y-1">
+          <span class="skeleton w-16"></span>
+        </span>
+      </div>
+    ))}
+  </div>
+</LiveBlock>

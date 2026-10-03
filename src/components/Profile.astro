@@ -1,0 +1,92 @@
+---
+import { getConfig } from '../lib/config';
+import LiveBlock from './LiveBlock.astro';
+import LanguageBar from './LanguageBar.astro';
+
+const { profile, site } = getConfig();
+const p = profile && profile.enabled ? profile : null;
+const githubUrl = `https://github.com/${site.githubUser}`;
+
+const cardClass = 'border border-(--color-border-subtle) bg-(--color-surface) p-4';
+const labelClass = 'mb-2 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)';
+const valueClass = 'font-[family-name:var(--font-mono)] text-lg text-(--color-text-bright)';
+---
+
+{p && (
+  <section id="profile" class="border-b border-(--color-border-subtle) py-12">
+    <div class="mx-auto w-[92%] max-w-5xl">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p class={labelClass}>Profile</p>
+          <h1 class="font-[family-name:var(--font-display)] text-3xl font-bold uppercase tracking-wide text-(--color-text-head)">
+            {p.name}
+          </h1>
+          {p.bio && <p class="mt-2 max-w-xl text-xs leading-relaxed text-(--color-text-muted)">{p.bio}</p>}
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-3 inline-flex items-center gap-1 font-[family-name:var(--font-mono)] text-[11px] text-(--color-accent) hover:underline"
+          >
+            @{site.githubUser} ↗
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {p.features.followers && (
+            <div class={cardClass} style="border-radius: var(--radius)">
+              <p class={labelClass}>Followers</p>
+              <span class={`live ${valueClass}`} data-live="profile.followers" data-live-fallback="—">—</span>
+            </div>
+          )}
+          {p.features.followers && (
+            <div class={cardClass} style="border-radius: var(--radius)">
+              <p class={labelClass}>Public repos</p>
+              <span class={`live ${valueClass}`} data-live="profile.publicRepos" data-live-fallback="—">—</span>
+            </div>
+          )}
+          {p.features.streak && (
+            <div class={cardClass} style="border-radius: var(--radius)">
+              <p class={labelClass}>Streak</p>
+              <span class={`live ${valueClass}`} data-live="profile.streak.current" data-live-fallback="—">—</span>
+              <span class="ml-1 font-[family-name:var(--font-mono)] text-[9px] text-(--color-text-dim)">days</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {p.features.last_commit && (
+          <div class={cardClass} style="border-radius: var(--radius)">
+            <p class={labelClass}>Last commit</p>
+            <LiveBlock path="profile.lastCommit" />
+          </div>
+        )}
+        {p.features.last_pr && (
+          <div class={cardClass} style="border-radius: var(--radius)">
+            <p class={labelClass}>Last pull request</p>
+            <LiveBlock path="profile.lastPr" />
+          </div>
+        )}
+        {p.features.last_issue && (
+          <div class={cardClass} style="border-radius: var(--radius)">
+            <p class={labelClass}>Last issue</p>
+            <LiveBlock path="profile.lastIssue" />
+          </div>
+        )}
+        {p.features.latest_release && (
+          <div class={cardClass} style="border-radius: var(--radius)">
+            <p class={labelClass}>Latest release</p>
+            <LiveBlock path="profile.latestRelease" />
+          </div>
+        )}
+        {p.features.languages && (
+          <div class={`${cardClass} md:col-span-2`} style="border-radius: var(--radius)">
+            <p class={labelClass}>Languages used</p>
+            <LanguageBar path="profile.languages" />
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}

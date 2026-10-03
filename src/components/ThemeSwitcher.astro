@@ -1,0 +1,168 @@
+---
+import { getConfig } from '../lib/config';
+
+const { theme } = getConfig();
+
+const themes = [
+  ['portfolio', 'Portfolio'],
+  ['terminal', 'Terminal'],
+  ['paper', 'Paper'],
+] as const;
+
+const palettes = [
+  ['teal', 'Teal'],
+  ['indigo', 'Indigo'],
+  ['amber', 'Amber'],
+  ['rose', 'Rose'],
+  ['green', 'Green'],
+] as const;
+
+const modes = [
+  ['dark', 'Dark'],
+  ['light', 'Light'],
+  ['auto', 'Auto'],
+] as const;
+---
+
+{theme.switcher && (
+  <details class="theme-switcher relative" id="theme-switcher">
+    <summary
+      class="flex cursor-pointer list-none items-center gap-1.5 border border-(--color-border) px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) transition-colors hover:border-(--color-text-muted) hover:text-(--color-text-bright) [&::-webkit-details-marker]:hidden"
+    >
+      <span class="inline-block h-2 w-2 rounded-full bg-(--color-accent)"></span>
+      Theme
+    </summary>
+
+    <div
+      class="absolute right-0 z-50 mt-2 w-56 border border-(--color-border) bg-(--color-surface) p-3 shadow-lg"
+      style="border-radius: var(--radius)"
+    >
+      <p class="mb-1.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">Theme</p>
+      <div class="mb-3 grid grid-cols-3 gap-1">
+        {themes.map(([id, label]) => (
+          <button
+            type="button"
+            data-set-theme={id}
+            aria-pressed="false"
+            class="border border-(--color-border-subtle) px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-muted) transition-colors hover:border-(--color-accent) hover:text-(--color-text-bright) aria-pressed:border-(--color-accent) aria-pressed:text-(--color-accent)"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <p class="mb-1.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">Palette</p>
+      <div class="mb-3 flex flex-wrap gap-1.5">
+        {palettes.map(([id, label]) => (
+          <button
+            type="button"
+            data-set-palette={id}
+            aria-pressed="false"
+            title={label}
+            aria-label={label}
+            class="flex h-5 w-5 items-center justify-center border border-(--color-border-subtle) aria-pressed:border-(--color-text-bright)"
+            style={`background: var(--swatch-${id}); border-radius: var(--radius);`}
+          >
+            <span class="sr-only">{label}</span>
+          </button>
+        ))}
+      </div>
+
+      <p class="mb-1.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">Mode</p>
+      <div class="grid grid-cols-3 gap-1">
+        {modes.map(([id, label]) => (
+          <button
+            type="button"
+            data-set-mode={id}
+            aria-pressed="false"
+            class="border border-(--color-border-subtle) px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-muted) transition-colors hover:border-(--color-accent) hover:text-(--color-text-bright) aria-pressed:border-(--color-accent) aria-pressed:text-(--color-accent)"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </details>
+)}
+
+<style>
+  :root {
+    --swatch-teal: #5ba3a8;
+    --swatch-indigo: #8b9cf9;
+    --swatch-amber: #d9a441;
+    --swatch-rose: #d97a9e;
+    --swatch-green: #5aab6e;
+  }
+
+  .theme-switcher[open] summary {
+    border-color: var(--color-accent);
+    color: var(--color-text-bright);
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var media = window.matchMedia('(prefers-color-scheme: light)');
+
+    function stored(key: string, fallback: string | undefined): string | undefined {
+      try {
+        return localStorage.getItem('foss:' + key) || fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function toggleLight(mode: string) {
+      root.classList.toggle('light', mode === 'light' || (mode === 'auto' && media.matches));
+    }
+
+    function sync() {
+      document.querySelectorAll<HTMLButtonElement>('[data-set-theme]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.setTheme === root.dataset.theme));
+      });
+      document.querySelectorAll<HTMLButtonElement>('[data-set-palette]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.setPalette === root.dataset.palette));
+      });
+      document.querySelectorAll<HTMLButtonElement>('[data-set-mode]').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.setMode === stored('mode', root.dataset.defaultMode)));
+      });
+    }
+
+    function save(key: string, value: string) {
+      try {
+        localStorage.setItem('foss:' + key, value);
+      } catch (e) {}
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('[data-set-theme]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        root.setAttribute('data-theme', b.dataset.setTheme!);
+        save('theme', b.dataset.setTheme!);
+        sync();
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-set-palette]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        root.setAttribute('data-palette', b.dataset.setPalette!);
+        save('palette', b.dataset.setPalette!);
+        sync();
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-set-mode]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        save('mode', b.dataset.setMode!);
+        toggleLight(b.dataset.setMode!);
+        sync();
+      });
+    });
+
+    media.addEventListener('change', function () {
+      if (stored('mode', root.dataset.defaultMode) === 'auto') sync();
+    });
+
+    sync();
+  })();
+</script>

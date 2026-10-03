@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base title="Not found">
+  <Nav />
+  <main id="main" class="flex min-h-[60vh] items-center">
+    <div class="mx-auto w-[92%] max-w-5xl">
+      <p class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] text-(--color-text-dim)">404</p>
+      <h1 class="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold uppercase tracking-wide text-(--color-text-head)">
+        Nothing here
+      </h1>
+      <p class="mt-3 text-sm text-(--color-text-muted)">
+        That project does not exist. <a href="/" class="text-(--color-accent) hover:underline">Back to the dashboard →</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Base>

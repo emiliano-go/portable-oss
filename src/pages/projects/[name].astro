@@ -1,0 +1,238 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import StatsStrip from '../../components/StatsStrip.astro';
+import LanguageBar from '../../components/LanguageBar.astro';
+import LiveBlock from '../../components/LiveBlock.astro';
+import ContributorsList from '../../components/ContributorsList.astro';
+import PackagesList from '../../components/PackagesList.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import UsageList from '../../components/UsageList.astro';
+import { getConfig } from '../../lib/config';
+
+export interface Props {
+  key: string;
+}
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const { projects } = getConfig();
+  return projects.map((project) => ({ params: { name: project.key }, props: { key: project.key } }));
+};
+
+const config = getConfig();
+const project = config.byKey[Astro.props.key];
+
+if (!project) {
+  throw new Error(`Unknown project "${Astro.props.key}"`);
+}
+
+const related = project.related.map((key) => config.byKey[key]);
+const linkChip =
+  'inline-flex items-center gap-1 border border-(--color-border) px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-muted) hover:border-(--color-text-muted) hover:text-(--color-text-bright)';
+const sectionHead =
+  'mb-5 flex items-center gap-4 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.12em] text-(--color-text-dim)';
+
+const hasStack =
+  project.stack.languages.length + project.stack.frameworks.length + project.stack.platforms.length > 0;
+---
+
+<Base title={project.name} description={project.description ?? undefined}>
+  <Nav />
+  <main id="main" class="pb-6">
+    <div class="mx-auto w-[92%] max-w-5xl pt-10">
+      <a
+        href="/"
+        class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-(--color-text-dim) hover:text-(--color-accent)"
+      >
+        ← all projects
+      </a>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <h1 class="font-[family-name:var(--font-display)] text-4xl font-bold uppercase tracking-wide text-(--color-text-head)">
+          {project.name}
+        </h1>
+        <StatusBadge status={project.status} archived={project.archived} />
+      </div>
+
+      {project.description && (
+        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-(--color-text-muted)">{project.description}</p>
+      )}
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        {project.repo && (
+          <a href={`https://github.com/${project.repo}`} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            repo ↗
+          </a>
+        )}
+        {project.url !== `https://github.com/${project.repo}` && (
+          <a href={project.url} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            website ↗
+          </a>
+        )}
+        {project.links.docs && (
+          <a href={project.links.docs} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            documentation ↗
+          </a>
+        )}
+        {project.links.changelog && (
+          <a href={project.links.changelog} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            changelog ↗
+          </a>
+        )}
+        {project.links.examples.map((item) => (
+          <a href={item.url} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            {item.label} ↗
+          </a>
+        ))}
+        {project.links.benchmarks.map((item) => (
+          <a href={item.url} target="_blank" rel="noopener noreferrer" class={linkChip} style="border-radius: var(--radius)">
+            {item.label} ↗
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {project.page.why && project.why && (
+      <section class="mt-10">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <blockquote class="border-l-2 border-(--color-accent) pl-4">
+            <p class="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.12em] text-(--color-text-dim)">
+              why does this exist?
+            </p>
+            <p class="mt-2 max-w-2xl text-sm italic leading-relaxed text-(--color-text-base)">{project.why}</p>
+          </blockquote>
+        </div>
+      </section>
+    )}
+
+    {project.page.stack && hasStack && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Stack
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <div class="grid gap-4 sm:grid-cols-3">
+            {[
+              ['Languages', project.stack.languages],
+              ['Frameworks', project.stack.frameworks],
+              ['Platforms', project.stack.platforms],
+            ].map(([label, items]) =>
+              (items as string[]).length > 0 ? (
+                <div class="border border-(--color-border-subtle) bg-(--color-surface) p-4" style="border-radius: var(--radius)">
+                  <p class="mb-2 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">
+                    {label}
+                  </p>
+                  <div class="flex flex-wrap gap-1.5">
+                    {(items as string[]).map((item) => (
+                      <span class="border border-(--color-border-subtle) px-2 py-0.5 font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-base)" style="border-radius: var(--radius)">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null,
+            )}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {project.stats.length > 0 && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <StatsStrip project={project} />
+        </div>
+      </section>
+    )}
+
+    {(project.page.last_commit || project.page.languages) && (
+      <section class="mt-12">
+        <div class="mx-auto grid w-[92%] max-w-5xl gap-6 md:grid-cols-2">
+          {project.page.last_commit && (
+            <div>
+              <h2 class={sectionHead}>
+                Last commit
+                <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+              </h2>
+              <LiveBlock path={`project.${project.key}.lastCommit`} />
+            </div>
+          )}
+          {project.page.languages && (
+            <div>
+              <h2 class={sectionHead}>
+                Languages
+                <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+              </h2>
+              <LanguageBar path={`project.${project.key}.languages`} />
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    {project.page.releases && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Releases
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <LiveBlock path={`project.${project.key}.releases`} />
+        </div>
+      </section>
+    )}
+
+    {project.page.packages && project.packages.length > 0 && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Packages
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <PackagesList project={project} />
+        </div>
+      </section>
+    )}
+
+    {project.page.contributors && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Contributors
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <ContributorsList path={`project.${project.key}.contributors`} />
+        </div>
+      </section>
+    )}
+
+    {project.page.usage && project.usedBy.length > 0 && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Real-world usage
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <UsageList items={project.usedBy} />
+        </div>
+      </section>
+    )}
+
+    {project.page.related && related.length > 0 && (
+      <section class="mt-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={sectionHead}>
+            Related projects
+            <span class="h-px flex-1 bg-(--color-border-subtle)"></span>
+          </h2>
+          <RelatedProjects projects={related} />
+        </div>
+      </section>
+    )}
+  </main>
+  <Footer />
+</Base>

@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+@import './themes.css';
+
+@theme {
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius-theme: 2px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    background-color: var(--color-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+
+  body,
+  nav,
+  button,
+  a {
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -150%);
+    z-index: 100;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    background: var(--color-surface);
+    color: var(--color-text-head);
+    border: 1px solid var(--color-accent);
+    border-radius: 0 0 4px 4px;
+    transition: transform 0.15s ease;
+  }
+  .skip-link:focus-visible {
+    transform: translate(-50%, 0);
+  }
+
+  /* Live stats: server-rendered fallback, hydrated from /api/stats */
+  .live[data-state='pending'] {
+    color: var(--color-text-dim);
+  }
+  .live[data-state='ready'] {
+    color: inherit;
+    animation: live-fade 0.35s ease;
+  }
+  .live[data-state='error'] {
+    color: var(--color-text-dim);
+  }
+
+  @keyframes live-fade {
+    from {
+      opacity: 0.35;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .skeleton {
+    display: inline-block;
+    min-width: 1.5rem;
+    height: 0.75em;
+    vertical-align: middle;
+    background: color-mix(in srgb, var(--color-text-dim) 20%, transparent);
+    border-radius: 2px;
+  }
+}

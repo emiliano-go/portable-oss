@@ -1,0 +1,21 @@
+---
+import LiveBlock from './LiveBlock.astro';
+
+export interface Props {
+  path: string;
+  label?: string;
+}
+
+const { path, label } = Astro.props;
+---
+
+<div>
+  {label && (
+    <p class="mb-2 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">{label}</p>
+  )}
+  <LiveBlock path={path} class="w-full">
+    <div class="flex h-2 w-full overflow-hidden bg-(--color-border-subtle)" style="border-radius: var(--radius)">
+      <span class="skeleton h-full w-full" style="height: 100%;"></span>
+    </div>
+  </LiveBlock>
+</div>

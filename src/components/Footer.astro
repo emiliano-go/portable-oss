@@ -1,0 +1,26 @@
+---
+import { getConfig } from '../lib/config';
+
+const { site, projects } = getConfig();
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-20 border-t border-(--color-border-subtle) py-10">
+  <div class="mx-auto flex w-[92%] max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-dim)">
+      © {year} {site.title} · {projects.length} projects · built from <span class="text-(--color-text-muted)">oss.config.toml</span>
+    </p>
+    <div class="flex flex-wrap gap-3">
+      {site.links.map((linkItem) => (
+        <a
+          href={linkItem.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) hover:text-(--color-accent)"
+        >
+          {linkItem.label} ↗
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>

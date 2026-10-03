@@ -1,0 +1,117 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Profile from '../components/Profile.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getConfig } from '../lib/config';
+
+const { site, featured, groups, orgs, projects } = getConfig();
+
+const headingClass =
+  'mb-6 flex items-center gap-4 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.12em] text-(--color-text-dim)';
+const ruleClass = 'h-px flex-1 bg-(--color-border-subtle)';
+---
+
+<Base>
+  <Nav />
+  <main id="main">
+    <section class="border-b border-(--color-border-subtle) py-16">
+      <div class="mx-auto w-[92%] max-w-5xl">
+        <p class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] text-(--color-text-dim)">
+          Open source · {projects.length} projects
+        </p>
+        <h1
+          class="mt-3 font-[family-name:var(--font-display)] text-[clamp(36px,6vw,64px)] font-bold uppercase leading-[0.95] tracking-wide text-(--color-text-head)"
+        >
+          {site.tagline}
+        </h1>
+        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-(--color-text-muted)">{site.description}</p>
+      </div>
+    </section>
+
+    <Profile />
+
+    {featured.length > 0 && (
+      <section id="featured" class="border-b border-(--color-border-subtle) py-12">
+        <div class="mx-auto w-[92%] max-w-5xl">
+          <h2 class={headingClass}>
+            Featured
+            <span class={ruleClass}></span>
+          </h2>
+          <div class="grid gap-4 md:grid-cols-2">
+            {featured.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {groups.map((group) => {
+      const visible = group.projects.filter((project) => !project.featured && !project.org);
+      return visible.length > 0 ? (
+        <section id={`group-${group.id}`} class="border-b border-(--color-border-subtle) py-12">
+          <div class="mx-auto w-[92%] max-w-5xl">
+            <h2 class={headingClass}>
+              {group.label}
+              <span class="text-(--color-text-dim)">/{visible.length}</span>
+              <span class={ruleClass}></span>
+            </h2>
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {visible.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null;
+    })}
+
+    {orgs.map((org) => {
+      const visible = org.projects.filter((project) => !project.featured);
+      return (
+        <section id={`org-${org.login}`} class="border-b border-(--color-border-subtle) py-12">
+          <div class="mx-auto w-[92%] max-w-5xl">
+            <h2 class={headingClass}>
+              {org.name}
+              <span class="text-(--color-text-dim)">org/{visible.length}</span>
+              <span class={ruleClass}></span>
+              <a
+                href={org.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-(--color-text-dim) hover:text-(--color-accent)"
+              >
+                github ↗
+              </a>
+            </h2>
+            {org.description && (
+              <p class="-mt-3 mb-5 max-w-2xl text-xs leading-relaxed text-(--color-text-muted)">{org.description}</p>
+            )}
+            <div class="mb-6 flex flex-wrap gap-x-5 gap-y-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-dim)">
+              <span>
+                <span class="live text-[12px] normal-case text-(--color-text-bright)" data-live={`orgs.${org.login}.publicRepos`}>—</span> repos
+              </span>
+              <span>
+                <span class="live text-[12px] normal-case text-(--color-text-bright)" data-live={`orgs.${org.login}.followers`}>—</span> followers
+              </span>
+            </div>
+            {visible.length > 0 ? (
+              <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {visible.map((project) => (
+                  <ProjectCard project={project} />
+                ))}
+              </div>
+            ) : (
+              <p class="font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-dim)">
+                No projects configured for this organization yet.
+              </p>
+            )}
+          </div>
+        </section>
+      );
+    })}
+  </main>
+  <Footer />
+</Base>

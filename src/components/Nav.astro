@@ -1,0 +1,66 @@
+---
+import { getConfig } from '../lib/config';
+import ThemeSwitcher from './ThemeSwitcher.astro';
+
+const { site, groups, orgs, featured } = getConfig();
+
+// Groups whose projects all appear in the featured or org sections have no anchor to link to.
+const visibleGroups = groups.filter((group) =>
+  group.projects.some((project) => !project.featured && !project.org),
+);
+---
+
+<header class="sticky top-0 z-40 border-b border-(--color-border-subtle) bg-(--color-bg)/90 backdrop-blur">
+  <nav class="mx-auto flex w-[92%] max-w-5xl items-center gap-4 py-3">
+    <a
+      href="/"
+      class="font-[family-name:var(--font-display)] text-lg font-bold uppercase tracking-wide text-(--color-text-head) hover:text-(--color-accent)"
+    >
+      {site.title}
+    </a>
+    <span class="hidden font-[family-name:var(--font-mono)] text-[10px] text-(--color-text-dim) lg:inline">
+      {site.tagline}
+    </span>
+
+    <div class="ml-auto flex items-center gap-3">
+      <div class="hidden items-center gap-3 sm:flex">
+        {featured.length > 0 && (
+          <a
+            href="/#featured"
+            class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) hover:text-(--color-text-bright)"
+          >
+            Featured
+          </a>
+        )}
+        {visibleGroups.map((group) => (
+          <a
+            href={`/#group-${group.id}`}
+            class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) hover:text-(--color-text-bright)"
+          >
+            {group.label}
+          </a>
+        ))}
+        {orgs.map((org) => (
+          <a
+            href={`/#org-${org.login}`}
+            class="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) hover:text-(--color-text-bright)"
+          >
+            {org.name}
+          </a>
+        ))}
+      </div>
+      {site.links.map((linkItem) => (
+        <a
+          href={linkItem.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden border border-(--color-border) px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.08em] text-(--color-text-muted) hover:border-(--color-text-muted) hover:text-(--color-text-bright) md:inline-flex"
+          style="border-radius: var(--radius)"
+        >
+          {linkItem.label} ↗
+        </a>
+      ))}
+      <ThemeSwitcher />
+    </div>
+  </nav>
+</header>

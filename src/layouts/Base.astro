@@ -1,0 +1,106 @@
+---
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '../styles/global.css';
+import { getConfig } from '../lib/config';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const config = getConfig();
+const { site, theme } = config;
+
+const title = Astro.props.title ? `${Astro.props.title} · ${site.title}` : `${site.title} · ${site.tagline}`;
+const description = Astro.props.description ?? site.description;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+
+function tokenName(key: string): string {
+  if (key === 'radius' || key.startsWith('font-')) return key;
+  return `color-${key}`;
+}
+
+const overrides = Object.entries(theme.colors)
+  .filter(([key, value]) => /^[a-z][a-z0-9-]*$/.test(key) && !/[;{}<>]/.test(value))
+  .map(([key, value]) => `--${tokenName(key)}: ${value};`)
+  .join(' ');
+---
+
+<!doctype html>
+<html
+  lang="en"
+  data-theme={theme.name}
+  data-palette={theme.palette}
+  data-default-theme={theme.name}
+  data-default-palette={theme.palette}
+  data-default-mode={theme.mode}
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.title} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {overrides && <style set:html={`:root { ${overrides} }`} />}
+    <script is:inline define:vars={{ defaultTheme: theme.name, defaultPalette: theme.palette, defaultMode: theme.mode }}>
+      (function () {
+        var root = document.documentElement;
+
+        function pref(key, fallback) {
+          try {
+            return localStorage.getItem('foss:' + key) || fallback;
+          } catch (e) {
+            return fallback;
+          }
+        }
+
+        function light(mode) {
+          return mode === 'light' || (mode === 'auto' && window.matchMedia('(prefers-color-scheme: light)').matches);
+        }
+
+        function apply() {
+          var theme = pref('theme', defaultTheme);
+          var palette = pref('palette', defaultPalette);
+          var mode = pref('mode', defaultMode);
+          root.setAttribute('data-theme', theme);
+          root.setAttribute('data-palette', palette);
+          root.classList.toggle('light', light(mode));
+          var a11y = pref('a11y', null);
+          if (a11y) {
+            try {
+              var s = JSON.parse(a11y);
+              if (s.contrast === 'high') root.setAttribute('data-contrast', 'high');
+              if (s.fontsize && s.fontsize !== 'default') root.setAttribute('data-fontsize', s.fontsize);
+            } catch (e) {}
+          }
+        }
+
+        apply();
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
+          if (pref('mode', defaultMode) === 'auto') apply();
+        });
+
+        window.__fossApplyTheme = apply;
+      })();
+    </script>
+  </head>
+  <body class="bg-(--color-bg) font-[family-name:var(--font-body)] text-(--color-text-base) antialiased">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <script>
+      import '../scripts/live';
+    </script>
+  </body>
+</html>

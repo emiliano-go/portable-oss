@@ -1,0 +1,17 @@
+---
+export interface Props {
+  path: string;
+  class?: string;
+}
+
+const { path, class: className = '' } = Astro.props;
+---
+
+<div data-live-block={path} data-state="pending" class={className}>
+  <slot>
+    <div class="space-y-2">
+      <span class="skeleton w-3/4"></span>
+      <span class="skeleton w-1/2"></span>
+    </div>
+  </slot>
+</div>

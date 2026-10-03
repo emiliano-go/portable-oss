@@ -1,0 +1,698 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# foss.emiliano-go.com — dashboard configuration
+# Every page, group, project, stat, link and theme on the site comes from here.
+# Repos, licenses and packages verified with `gh` against the portfolio lists.
+# Docs and schema: see src/lib/config.ts
+# ─────────────────────────────────────────────────────────────────────────────
+
+[site]
+title = "FOSS"
+tagline = "Open source by Emiliano G.O."
+description = "Every open source project I build and maintain — live stats, releases and packages."
+url = "https://foss.emiliano-go.com"
+github_user = "emiliano-go"
+cache_minutes = 15
+
+[[site.links]]
+label = "Portfolio"
+url = "https://emiliano-go.com"
+
+[[site.links]]
+label = "GitHub"
+url = "https://github.com/emiliano-go"
+
+# ── Theme ────────────────────────────────────────────────────────────────────
+# name:    portfolio | terminal | paper
+# palette: teal | indigo | amber | rose | green
+# mode:    dark | light | auto
+[theme]
+name = "portfolio"
+palette = "teal"
+mode = "auto"
+switcher = true
+
+[theme.colors]
+# accent = "#5ba3a8"
+
+# ── Profile ──────────────────────────────────────────────────────────────────
+[profile]
+enabled = true
+name = "Emiliano G.O."
+bio = "I build free software, mostly for Uruguay."
+
+[profile.features]
+last_commit = true
+last_pr = true
+last_issue = true
+languages = true
+followers = true
+latest_release = true
+streak = true
+
+# ── Groups ───────────────────────────────────────────────────────────────────
+[groups.core]
+label = "Core"
+order = 1
+
+[groups.libraries]
+label = "Libraries"
+order = 2
+
+[groups.tooling]
+label = "Tooling & Apps"
+order = 3
+
+[groups.legacy]
+label = "Legacy"
+order = 5
+
+[groups.community]
+label = "Community"
+order = 6
+
+# ── Organizations ────────────────────────────────────────────────────────────
+# Each org gets its own section on the homepage. Projects land in an org
+# section when their repo owner matches the login, or via `org = "login"` for
+# repo-less org entries. Org repos are excluded from group sections.
+
+[orgs.dbwarden-org]
+name = "DBWarden"
+description = "Declarative database migrations for Python and the plugin ecosystem around them."
+url = "https://github.com/dbwarden-org"
+order = 1
+
+[orgs.LibreCourseUY]
+name = "LibreCourseUY"
+description = "Open source organization promoting the FOSS ecosystem in Uruguay. 400+ members."
+url = "https://github.com/LibreCourseUY"
+order = 2
+
+# ── Featured / Core ──────────────────────────────────────────────────────────
+# Mirrors portfolio's featured list:
+# DBWarden, TrustSight, rypipe, postal, neurafly, easeo, ClickVault, dsig.
+# status: production | beta | alpha | experimental | wip | archived
+# stats:  stars | forks | issues | downloads | last_commit | license | release | languages
+
+[projects.dbwarden]
+name = "DBWarden"
+url = "https://github.com/dbwarden-org/dbwarden"
+repo = "dbwarden-org/dbwarden"
+description = "Declarative schema compiler for SQLAlchemy. 48K LOC, 127 test files, 5 DB backends, 7 plugins, release-certification harness."
+why = "Schema changes shouldn't depend on hand-written migration files."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "forks", "downloads", "last_commit", "license"]
+related = ["trustsight", "rypipe", "dbwarden-harness"]
+
+[projects.dbwarden.stack]
+languages = ["Python", "SQL"]
+frameworks = ["SQLAlchemy", "PostgreSQL", "MySQL", "ClickHouse"]
+platforms = ["Docker", "Linux"]
+
+[projects.dbwarden.links]
+docs = "https://docs.dbwarden.org"
+changelog = "https://github.com/dbwarden-org/dbwarden/releases"
+
+[[projects.dbwarden.packages]]
+url = "https://pypi.org/project/dbwarden/"
+description = "PyPI package"
+
+[projects.trustsight]
+name = "TrustSight"
+url = "https://github.com/emiliano-go/trustsight"
+repo = "emiliano-go/trustsight"
+description = "Evidence-driven security analysis for AUR packages. 3,967+ tests, 185 scoring rules, corpus-wide cluster detection, signed IOC baselines. Never executes code."
+why = "AUR updates deserve scrutiny before they run, and analysis should never execute the code it judges."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "forks", "downloads", "last_commit", "license"]
+related = ["dbwarden", "rypipe", "trustsight-harness"]
+
+[projects.trustsight.stack]
+languages = ["Python"]
+frameworks = ["SQLite", "Arch Linux"]
+platforms = ["Docker", "Linux"]
+
+[projects.trustsight.links]
+docs = "https://docs.trustsight.org"
+changelog = "https://github.com/emiliano-go/trustsight/releases"
+
+[[projects.trustsight.packages]]
+url = "https://pypi.org/project/trustsight/"
+description = "PyPI package"
+
+[projects.rypipe]
+name = "rypipe"
+url = "https://github.com/emiliano-go/rypipe"
+repo = "emiliano-go/rypipe"
+description = "Rust ingestion framework. 476 tests, 15.9K docs lines, published to PyPI. 4.2 GB/s parallel throughput."
+why = "Every data source deserves the same ingestion engine — add a format by implementing two traits."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "forks", "downloads", "last_commit", "license"]
+related = ["crxml", "easeo", "lambda-compiler"]
+
+[projects.rypipe.stack]
+languages = ["Rust", "Python"]
+frameworks = ["PyO3", "Arrow"]
+platforms = ["Linux", "macOS"]
+
+[projects.rypipe.links]
+docs = "https://rypipe.emiliano-go.com"
+changelog = "https://github.com/emiliano-go/rypipe/releases"
+
+[[projects.rypipe.packages]]
+url = "https://pypi.org/project/rypipe/"
+description = "PyPI package"
+
+[projects.postal]
+name = "postal"
+url = "https://github.com/emiliano-go/postal"
+repo = "emiliano-go/postal"
+description = "Native WhatsApp client that speaks the multi-device protocol directly. No webview, 0.3% idle CPU, bounded RAM, opt-in history sync."
+why = "Messaging history is a choice, not a 20 GB download."
+status = "beta"
+group = "core"
+featured = true
+stats = ["stars", "forks", "downloads", "last_commit", "license"]
+related = ["neurafly"]
+
+[projects.postal.stack]
+languages = ["Rust", "Svelte"]
+frameworks = ["Tauri 2", "SQLite"]
+platforms = ["Linux", "macOS", "Windows"]
+
+[[projects.postal.packages]]
+url = "https://github.com/emiliano-go/postal/releases"
+description = "Desktop release artifacts"
+show = ["version", "downloads"]
+
+[projects.neurafly]
+name = "neurafly"
+url = "https://github.com/emiliano-go/neurafly"
+repo = "emiliano-go/neurafly"
+description = "Terminal audio visualizer driven by the real FlyWire connectome: 138,333 spiking neurons, 2,052,622 synapses, rendered in braille."
+why = "Neuroscience data should be something you can see and hear."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["postal"]
+
+[projects.neurafly.stack]
+languages = ["Rust"]
+frameworks = ["TUI", "DSP"]
+platforms = ["Linux"]
+
+[[projects.neurafly.packages]]
+url = "https://crates.io/crates/neurafly"
+description = "crates.io crate"
+
+[projects.easeo]
+name = "easeo"
+url = "https://github.com/emiliano-go/easeo"
+repo = "emiliano-go/easeo"
+description = "Deterministic SEO metadata from one Rust core with Python and Node.js bindings. Byte-for-byte identical output across languages."
+why = "SEO metadata shouldn't disagree between the library, the CLI and the build step."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["rypipe", "seoslug"]
+
+[projects.easeo.stack]
+languages = ["Rust", "Python", "Node.js"]
+frameworks = ["JSON-LD"]
+platforms = ["Linux", "macOS"]
+
+[projects.easeo.links]
+docs = "https://easeo.emiliano-go.com"
+changelog = "https://github.com/emiliano-go/easeo/releases"
+
+[[projects.easeo.packages]]
+url = "https://pypi.org/project/easeo/"
+description = "PyPI package"
+
+[projects.clickvault]
+name = "ClickVault"
+url = "https://github.com/emiliano-go/clickvault"
+repo = "emiliano-go/clickvault"
+description = "HashiCorp Vault plugin for ClickHouse. 85.4% coverage, cluster-aware DDL, dynamic credentials."
+why = "ClickHouse credentials should be short-lived and issued by Vault, not pasted into configs."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.clickvault.stack]
+languages = ["Go"]
+frameworks = ["Vault", "ClickHouse"]
+platforms = ["Docker", "Linux"]
+
+[projects.dsig]
+name = "dsig"
+url = "https://github.com/emiliano-go/dsig"
+repo = "emiliano-go/dsig"
+description = "GPG message signing for Discord. 142 tests, invisible encoding, empirical Discord client testing."
+why = "Discord messages should be verifiable, not trust-me-bro."
+status = "production"
+group = "core"
+featured = true
+stats = ["stars", "last_commit", "license"]
+
+[projects.dsig.stack]
+languages = ["TypeScript"]
+frameworks = ["GPG", "OpenPGP"]
+
+# ── Libraries ────────────────────────────────────────────────────────────────
+
+[projects.crxml]
+name = "crxml"
+url = "https://github.com/emiliano-go/crxml"
+repo = "emiliano-go/crxml"
+description = "Crystal Reports XML parser built on the rypipe engine. 184 Python tests + 63 Rust tests, differential testing, bounded memory."
+status = "production"
+group = "libraries"
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["rypipe"]
+
+[projects.crxml.stack]
+languages = ["Rust", "Python"]
+frameworks = ["XML", "Arrow"]
+
+[[projects.crxml.packages]]
+url = "https://pypi.org/project/crxml/"
+
+[projects.schemap]
+name = "schemap"
+url = "https://github.com/emiliano-go/schemap"
+repo = "emiliano-go/schemap"
+description = "Automatic Pydantic v2 schemas from SQLAlchemy 2.0 ORM models. 149 tests, thorough edge case coverage."
+status = "production"
+group = "libraries"
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.schemap.stack]
+languages = ["Python"]
+frameworks = ["Pydantic", "SQLAlchemy"]
+
+[[projects.schemap.packages]]
+url = "https://pypi.org/project/schemap/"
+
+[projects.detrack]
+name = "detrack"
+url = "https://github.com/emiliano-go/detrack"
+repo = "emiliano-go/detrack"
+description = "Strip tracking parameters from URLs. 345 patterns, zero dependencies, 126 tests."
+why = "Links should carry you to the page, not to an analytics dashboard."
+status = "production"
+group = "libraries"
+stats = ["stars", "downloads", "last_commit", "license"]
+
+[projects.detrack.stack]
+languages = ["Python"]
+
+[[projects.detrack.packages]]
+url = "https://pypi.org/project/detrack/"
+
+[projects.acrresolv]
+name = "acrresolv"
+url = "https://github.com/emiliano-go/acrresolv"
+repo = "emiliano-go/acrresolv"
+description = "Hybrid acronym resolver: lookup + rules + T5-small fallback. 95.5% accuracy on unseen data, <1 ms rules path."
+status = "beta"
+group = "libraries"
+stats = ["stars", "downloads", "last_commit", "license"]
+
+[projects.acrresolv.stack]
+languages = ["Python"]
+frameworks = ["T5-small", "NLP"]
+
+[[projects.acrresolv.packages]]
+url = "https://pypi.org/project/acrresolv/"
+
+[projects.tagurl]
+name = "tagurl"
+url = "https://github.com/emiliano-go/tagurl"
+repo = "emiliano-go/tagurl"
+description = "Natural-language query to ranked semantic tags and an SEO URL path. Design spec, implementation in progress."
+status = "wip"
+group = "libraries"
+stats = ["stars", "last_commit", "license"]
+
+[projects.tagurl.stack]
+languages = ["Python"]
+frameworks = ["NLP", "SEO"]
+
+[projects.lambda-compiler]
+name = "lambda-compiler"
+url = "https://github.com/emiliano-go/lambda-compiler"
+repo = "emiliano-go/lambda-compiler"
+description = "Compile Python lambdas into declarative filter specs via CPython bytecode analysis. Extracted from rypipe."
+status = "production"
+group = "libraries"
+stats = ["stars", "last_commit", "license"]
+related = ["rypipe"]
+
+[projects.lambda-compiler.stack]
+languages = ["Python"]
+frameworks = ["Bytecode"]
+
+# ── Tooling & Apps ───────────────────────────────────────────────────────────
+
+[projects.vigil]
+name = "vigil"
+url = "https://github.com/emiliano-go/vigil"
+repo = "emiliano-go/vigil"
+description = "Self-hosted GitHub activity tracker. Syncs every commit into ClickHouse, serves streaks and breakdowns over a REST API."
+why = "My contribution history belongs on my own infrastructure, not in someone else's dashboard."
+status = "production"
+group = "tooling"
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["interferon"]
+
+[projects.vigil.stack]
+languages = ["Python"]
+frameworks = ["FastAPI", "ClickHouse", "Prefect"]
+platforms = ["Docker", "Linux"]
+
+[[projects.vigil.packages]]
+url = "https://github.com/emiliano-go/vigil/releases"
+description = "Container image and release artifacts"
+show = ["version", "downloads"]
+
+[projects.mapcreator]
+name = "mapcreator"
+url = "https://mapcreator.emiliano-go.com"
+repo = "emiliano-go/mapcreator"
+description = "Browser-based multi-floor building map editor with A* pathfinding and JSON export. React 19 + Canvas, live demo."
+status = "production"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+
+[projects.mapcreator.stack]
+languages = ["TypeScript"]
+frameworks = ["React", "Canvas", "A*"]
+
+[projects.interferon]
+name = "interferon"
+url = "https://github.com/emiliano-go/interferon"
+repo = "emiliano-go/interferon"
+description = "Docker sidecar watcher + Python SDK: container lifecycle events become typed immune signals over HTTP SSE."
+status = "beta"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+related = ["vigil"]
+
+[projects.interferon.stack]
+languages = ["Python"]
+frameworks = ["Docker", "SSE"]
+
+[projects.trustsight-harness]
+name = "trustsight-harness"
+url = "https://github.com/emiliano-go/trustsight-harness"
+repo = "emiliano-go/trustsight-harness"
+description = "Adversarial measurement harness for TrustSight. 26 pinned campaigns, 153 tests, cost-tracked and reproducible."
+status = "production"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+related = ["trustsight"]
+
+[projects.trustsight-harness.stack]
+languages = ["Python"]
+frameworks = ["Docker", "pytest"]
+
+[projects.trustsight-web]
+name = "trustsight-web"
+url = "https://github.com/emiliano-go/trustsight-web"
+repo = "emiliano-go/trustsight-web"
+description = "Single-page site for trustsight.org presenting the evidence-first AUR review model: capabilities, calibration, limits."
+status = "production"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+related = ["trustsight"]
+
+[projects.trustsight-web.stack]
+languages = ["JavaScript"]
+frameworks = ["React", "Vite"]
+
+[projects.carpricepredictor]
+name = "carpricepredictor"
+url = "https://github.com/emiliano-go/carpricepredictor"
+repo = "emiliano-go/carpricepredictor"
+description = "Linear-regression car price predictor: modular pipeline, FastAPI service, and browser front end, all containerized."
+status = "production"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+
+[projects.carpricepredictor.stack]
+languages = ["Python", "Jupyter"]
+frameworks = ["scikit-learn", "FastAPI"]
+platforms = ["Docker"]
+
+[projects.autoimmune-disorder-prediction]
+name = "autoimmune-disorder-prediction"
+url = "https://github.com/emiliano-go/autoimmune-disorder-prediction"
+repo = "emiliano-go/autoimmune-disorder-prediction"
+description = "ML exploration of the All Autoimmune Disorder 10k dataset: reproducible ingestion/cleaning pipeline plus EDA notebooks."
+status = "production"
+group = "tooling"
+stats = ["stars", "last_commit", "license"]
+
+[projects.autoimmune-disorder-prediction.stack]
+languages = ["Python", "Jupyter"]
+frameworks = ["scikit-learn", "pandas"]
+
+# ── DBWarden ecosystem ───────────────────────────────────────────────────────
+
+[projects.dbwarden-harness]
+name = "dbwarden-harness"
+url = "https://github.com/dbwarden-org/dbwarden-harness"
+repo = "dbwarden-org/dbwarden-harness"
+description = "Release-certification harness across 5 databases. 189 tests, 12 suites, MCP server."
+status = "production"
+stats = ["stars", "last_commit"]
+related = ["dbwarden"]
+
+[projects.dbwarden-harness.stack]
+languages = ["Python"]
+frameworks = ["Docker", "Testcontainers"]
+
+[projects.dbwarden-harness.page]
+releases = false
+
+[projects.wlite]
+name = "wlite"
+url = "https://github.com/dbwarden-org/wlite"
+repo = "dbwarden-org/wlite"
+description = "CLI and language bindings (C++, Rust, Python, Go, Zig) for libwlite."
+status = "beta"
+stats = ["stars", "last_commit", "license"]
+related = ["libwlite", "dbwarden"]
+
+[projects.wlite.stack]
+languages = ["C", "Rust", "Python", "Go", "Zig"]
+frameworks = ["SQLite"]
+[projects.wlite.page]
+releases = false
+
+[projects.libwlite]
+name = "libwlite"
+url = "https://github.com/dbwarden-org/libwlite"
+repo = "dbwarden-org/libwlite"
+description = "C library for SQLite schema management, migrations, and queries."
+status = "beta"
+stats = ["stars", "last_commit", "license"]
+related = ["wlite"]
+
+[projects.libwlite.stack]
+languages = ["C"]
+frameworks = ["SQLite"]
+[projects.libwlite.page]
+releases = false
+
+[projects.dbwarden-redis]
+name = "dbwarden-redis"
+url = "https://github.com/dbwarden-org/dbwarden-redis"
+repo = "dbwarden-org/dbwarden-redis"
+description = "Redis-backed distributed migration locking for DBWarden."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-redis.stack]
+languages = ["Python"]
+frameworks = ["Redis"]
+[projects.dbwarden-redis.page]
+releases = false
+
+[projects.dbwarden-fastapi]
+name = "dbwarden-fastapi"
+url = "https://github.com/dbwarden-org/dbwarden-fastapi"
+repo = "dbwarden-org/dbwarden-fastapi"
+description = "DBWarden plugin for FastAPI: session dependencies, health endpoints, migration routes."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-fastapi.stack]
+languages = ["Python"]
+frameworks = ["FastAPI"]
+[projects.dbwarden-fastapi.page]
+releases = false
+
+[projects.dbwarden-ch-rbac]
+name = "dbwarden-ch-rbac"
+url = "https://github.com/dbwarden-org/dbwarden-ch-rbac"
+repo = "dbwarden-org/dbwarden-ch-rbac"
+description = "DBWarden plugin for ClickHouse role-based access control: roles, users, grants."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-ch-rbac.stack]
+languages = ["Python"]
+frameworks = ["ClickHouse", "RBAC"]
+[projects.dbwarden-ch-rbac.page]
+releases = false
+
+[projects.dbwarden-pgsql-types]
+name = "dbwarden-pgsql-types"
+url = "https://github.com/dbwarden-org/dbwarden-pgsql-types"
+repo = "dbwarden-org/dbwarden-pgsql-types"
+description = "DBWarden plugin for PostgreSQL custom types: ENUMs, domains, composites."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-pgsql-types.stack]
+languages = ["Python"]
+frameworks = ["PostgreSQL"]
+[projects.dbwarden-pgsql-types.page]
+releases = false
+
+[projects.dbwarden-pgsql-rbac]
+name = "dbwarden-pgsql-rbac"
+url = "https://github.com/dbwarden-org/dbwarden-pgsql-rbac"
+repo = "dbwarden-org/dbwarden-pgsql-rbac"
+description = "DBWarden plugin for PostgreSQL role-based access control: roles, grants, row-level security."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-pgsql-rbac.stack]
+languages = ["Python"]
+frameworks = ["PostgreSQL", "RBAC"]
+[projects.dbwarden-pgsql-rbac.page]
+releases = false
+
+[projects.dbwarden-pgsql-extensions]
+name = "dbwarden-pgsql-extensions"
+url = "https://github.com/dbwarden-org/dbwarden-pgsql-extensions"
+repo = "dbwarden-org/dbwarden-pgsql-extensions"
+description = "DBWarden plugin for PostgreSQL extensions: CREATE/DROP EXTENSION management."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-pgsql-extensions.stack]
+languages = ["Python"]
+frameworks = ["PostgreSQL"]
+[projects.dbwarden-pgsql-extensions.page]
+releases = false
+
+[projects.dbwarden-plugin-template]
+name = "dbwarden-plugin-template"
+url = "https://github.com/dbwarden-org/dbwarden-plugin-template"
+repo = "dbwarden-org/dbwarden-plugin-template"
+description = "Template for building DBWarden plugins: project scaffolding, conformance harness."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-plugin-template.stack]
+languages = ["Python"]
+frameworks = ["Scaffolding"]
+[projects.dbwarden-plugin-template.page]
+releases = false
+
+[projects.dbwarden-seeds]
+name = "dbwarden-seeds"
+url = "https://github.com/dbwarden-org/dbwarden-seeds"
+repo = "dbwarden-org/dbwarden-seeds"
+description = "DBWarden plugin for seed data management: apply, rollback, and export."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-seeds.stack]
+languages = ["Python"]
+frameworks = ["Data"]
+[projects.dbwarden-seeds.page]
+releases = false
+
+[projects.dbwarden-sandbox]
+name = "dbwarden-sandbox"
+url = "https://github.com/dbwarden-org/dbwarden-sandbox"
+repo = "dbwarden-org/dbwarden-sandbox"
+description = "DBWarden plugin for sandbox testing: run migrations against temporary databases."
+status = "production"
+stats = ["stars", "last_commit", "license"]
+related = ["dbwarden"]
+
+[projects.dbwarden-sandbox.stack]
+languages = ["Python"]
+frameworks = ["Testing"]
+[projects.dbwarden-sandbox.page]
+releases = false
+
+# ── Legacy ───────────────────────────────────────────────────────────────────
+
+[projects.seoslug]
+name = "seoslug"
+url = "https://github.com/emiliano-go/seoslug"
+repo = "emiliano-go/seoslug"
+description = "Canonical URL normalization and deterministic SEO payload generation. Superseded by easeo."
+status = "archived"
+group = "legacy"
+archived = true
+stats = ["stars", "downloads", "last_commit", "license"]
+related = ["easeo"]
+
+[projects.seoslug.stack]
+languages = ["Python"]
+
+[[projects.seoslug.packages]]
+url = "https://pypi.org/project/seoslug/"
+
+[projects.seoslug.page]
+releases = false
+
+# ── Community ────────────────────────────────────────────────────────────────
+
+[projects.fastapi-boilerplate]
+name = "FastAPI-boilerplate"
+url = "https://github.com/benavlabs/FastAPI-boilerplate"
+repo = "benavlabs/FastAPI-boilerplate"
+description = "Batteries-included async FastAPI starter. Co-maintainer since v0.18.0, the pluggable restructure release."
+status = "production"
+group = "community"
+stats = ["stars", "forks", "last_commit", "license"]
+
+[projects.fastapi-boilerplate.stack]
+languages = ["Python"]
+frameworks = ["FastAPI", "SQLAlchemy", "Taskiq", "Redis"]
+
+[projects.librecourse]
+name = "LibreCourseUY"
+url = "https://github.com/LibreCourseUY"
+org = "LibreCourseUY"
+description = "Open source organization promoting the FOSS ecosystem in Uruguay. 400+ members."
+status = "production"
+group = "community"
+stats = []

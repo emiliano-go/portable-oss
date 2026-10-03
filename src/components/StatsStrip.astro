@@ -1,0 +1,60 @@
+---
+import type { ResolvedProject, StatKey } from '../lib/config';
+
+export interface Props {
+  project: ResolvedProject;
+}
+
+const { project } = Astro.props;
+
+const statLabels: Record<StatKey, string> = {
+  stars: 'GitHub stars',
+  forks: 'Forks',
+  issues: 'Open issues',
+  downloads: 'Downloads',
+  last_commit: 'Last commit',
+  license: 'License',
+  release: 'Release',
+  languages: 'Top language',
+};
+
+function statPath(key: string, stat: StatKey): string {
+  switch (stat) {
+    case 'stars':
+      return `project.${key}.stars`;
+    case 'forks':
+      return `project.${key}.forks`;
+    case 'issues':
+      return `project.${key}.openIssues`;
+    case 'downloads':
+      return `project.${key}.downloads`;
+    case 'last_commit':
+      return `project.${key}.lastCommit.date`;
+    case 'license':
+      return `project.${key}.license`;
+    case 'release':
+      return `project.${key}.latestRelease.tag`;
+    case 'languages':
+      return `project.${key}.topLanguage`;
+  }
+}
+---
+
+{project.stats.length > 0 && (
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    {project.stats.map((stat) => (
+      <div class="border border-(--color-border-subtle) bg-(--color-surface) p-3" style="border-radius: var(--radius)">
+        <p class="mb-1 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] text-(--color-text-dim)">
+          {statLabels[stat]}
+        </p>
+        <span
+          class="live font-[family-name:var(--font-mono)] text-base text-(--color-text-bright)"
+          data-live={statPath(project.key, stat)}
+          data-live-fallback={project.fallback[stat] ?? '—'}
+        >
+          —
+        </span>
+      </div>
+    ))}
+  </div>
+)}

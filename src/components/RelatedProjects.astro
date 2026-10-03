@@ -1,0 +1,28 @@
+---
+import type { ResolvedProject } from '../lib/config';
+import StatusBadge from './StatusBadge.astro';
+
+export interface Props {
+  projects: ResolvedProject[];
+}
+
+const { projects } = Astro.props;
+---
+
+<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+  {projects.map((project) => (
+    <a
+      href={`/projects/${project.key}`}
+      class="border border-(--color-border-subtle) bg-(--color-surface) p-4 transition-colors hover:border-(--color-accent)"
+      style="border-radius: var(--radius)"
+    >
+      <div class="flex items-start justify-between gap-2">
+        <span class="font-[family-name:var(--font-display)] text-base font-bold uppercase tracking-wide text-(--color-text-head)">
+          {project.name}
+        </span>
+        <StatusBadge status={project.status} archived={project.archived} />
+      </div>
+      {project.description && <p class="mt-2 line-clamp-2 text-[11px] leading-relaxed text-(--color-text-muted)">{project.description}</p>}
+    </a>
+  ))}
+</div>

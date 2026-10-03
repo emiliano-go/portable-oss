@@ -1,0 +1,35 @@
+---
+import type { Status } from '../lib/config';
+
+export interface Props {
+  status: Status | null;
+  archived?: boolean;
+  class?: string;
+}
+
+const { status, archived = false, class: className = '' } = Astro.props;
+
+const colors: Record<Status, string> = {
+  production: 'var(--color-success)',
+  beta: 'var(--color-gold)',
+  alpha: 'var(--color-gold-dim)',
+  experimental: 'var(--color-edu)',
+  wip: 'var(--color-text-muted)',
+  archived: 'var(--color-fail)',
+};
+
+const label = archived ? 'archived' : status;
+---
+
+{label && (
+  <span
+    class:list={[
+      'inline-flex items-center gap-1.5 border px-2 py-0.5 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em]',
+      className,
+    ]}
+    style={`border-color: ${colors[label]}; color: ${colors[label]}; border-radius: var(--radius);`}
+  >
+    <span class="inline-block h-1.5 w-1.5 rounded-full" style={`background: ${colors[label]};`}></span>
+    {label}
+  </span>
+)}

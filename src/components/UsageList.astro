@@ -1,0 +1,29 @@
+---
+import type { UsageItem } from '../lib/config';
+
+export interface Props {
+  items: UsageItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid gap-3 sm:grid-cols-2">
+  {items.map((item) => (
+    <div class="border border-(--color-border-subtle) bg-(--color-surface) p-4" style="border-radius: var(--radius)">
+      {item.url ? (
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-[family-name:var(--font-mono)] text-[12px] text-(--color-text-bright) hover:text-(--color-accent)"
+        >
+          {item.name} ↗
+        </a>
+      ) : (
+        <span class="font-[family-name:var(--font-mono)] text-[12px] text-(--color-text-bright)">{item.name}</span>
+      )}
+      {item.note && <p class="mt-2 text-[11px] leading-relaxed text-(--color-text-muted)">{item.note}</p>}
+    </div>
+  ))}
+</div>

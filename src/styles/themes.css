@@ -1,0 +1,221 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Theme tokens. Composed from three independent layers:
+     [data-theme]   neutrals + typography + radius (portfolio | terminal | paper)
+     [data-palette] accent + status colors       (teal | indigo | amber | rose | green)
+     html.light     light variants of whichever theme is active
+   Defaults (:root) = portfolio + teal, so the site renders before JS runs.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --color-bg: #0a0c0e;
+  --color-surface: #111418;
+  --color-surface-raised: #181c22;
+  --color-border: #2a3040;
+  --color-border-subtle: #1a1f28;
+  --color-text-dim: #5a6578;
+  --color-text-muted: #94a0b4;
+  --color-text-base: #bcc6d4;
+  --color-text-bright: #dce4ee;
+  --color-text-head: #f0f4fa;
+  --color-gold: #c9a84c;
+  --color-gold-dim: #a88a3a;
+  --color-edu: #5a8a9e;
+  --color-success: #5a9e6a;
+  --color-fail: #9e5a5a;
+  --color-on-accent: #0a0c0e;
+  --accent: #5ba3a8;
+  --accent-dim: #4a8a8e;
+  --accent-muted: #3a7276;
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-muted: var(--accent-muted);
+  --color-star: var(--accent);
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius: 2px;
+}
+
+/* ── Theme: terminal ─────────────────────────────────────────────────────── */
+[data-theme='terminal'] {
+  --color-bg: #020403;
+  --color-surface: #070d08;
+  --color-surface-raised: #0d150f;
+  --color-border: #1d2c1f;
+  --color-border-subtle: #101a12;
+  --color-text-dim: #4e6b52;
+  --color-text-muted: #7fa886;
+  --color-text-base: #a8d0ae;
+  --color-text-bright: #c6e8ca;
+  --color-text-head: #e2f7e5;
+  --color-gold: #c9a84c;
+  --color-gold-dim: #a88a3a;
+  --color-edu: #5a9e8e;
+  --color-success: #5aab6e;
+  --color-fail: #b06a5a;
+  --color-on-accent: #020403;
+  --font-body: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-display: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --radius: 0px;
+}
+
+/* ── Theme: paper ────────────────────────────────────────────────────────── */
+[data-theme='paper'] {
+  --color-bg: #141210;
+  --color-surface: #1c1916;
+  --color-surface-raised: #26221e;
+  --color-border: #3a342c;
+  --color-border-subtle: #26221e;
+  --color-text-dim: #7a7266;
+  --color-text-muted: #b0a696;
+  --color-text-base: #d4cabb;
+  --color-text-bright: #e8dfd2;
+  --color-text-head: #f5ede1;
+  --color-gold: #c9a84c;
+  --color-gold-dim: #a88a3a;
+  --color-edu: #7a8a9e;
+  --color-success: #6a9e5a;
+  --color-fail: #b07a5a;
+  --color-on-accent: #141210;
+  --radius: 3px;
+}
+
+/* ── Light: portfolio ────────────────────────────────────────────────────── */
+html.light {
+  --color-bg: #f4f6f8;
+  --color-surface: #eaecf0;
+  --color-surface-raised: #dde1e8;
+  --color-border: #9aa4b4;
+  --color-border-subtle: #c8cdd6;
+  --color-text-dim: #5a6478;
+  --color-text-muted: #2a3448;
+  --color-text-base: #0e1828;
+  --color-text-bright: #060e1a;
+  --color-text-head: #020610;
+  --color-gold: #8a7a2a;
+  --color-gold-dim: #7a6a1a;
+  --color-edu: #3a6a7e;
+  --color-success: #3a7a4a;
+  --color-fail: #7a3a3a;
+  --color-on-accent: #f4f6f8;
+}
+
+html.light[data-theme='terminal'] {
+  --color-bg: #f2f7f2;
+  --color-surface: #e4ece5;
+  --color-surface-raised: #d4e0d6;
+  --color-border: #7e9c84;
+  --color-border-subtle: #b8ccbb;
+  --color-text-dim: #4e6b52;
+  --color-text-muted: #234a2c;
+  --color-text-base: #0e2c16;
+  --color-text-bright: #061c0c;
+  --color-text-head: #021206;
+  --color-on-accent: #f2f7f2;
+  --radius: 0px;
+}
+
+html.light[data-theme='paper'] {
+  --color-bg: #faf7f2;
+  --color-surface: #f1ece2;
+  --color-surface-raised: #e6ded0;
+  --color-border: #b8ab98;
+  --color-border-subtle: #d8cfc0;
+  --color-text-dim: #6a6152;
+  --color-text-muted: #453d30;
+  --color-text-base: #2a251e;
+  --color-text-bright: #1a1610;
+  --color-text-head: #0e0b06;
+  --color-gold: #7a6a1a;
+  --color-gold-dim: #6a5a12;
+  --color-edu: #4a6a7e;
+  --color-success: #3a6a3a;
+  --color-fail: #8a4a3a;
+  --color-on-accent: #faf7f2;
+  --radius: 3px;
+}
+
+/* ── Palettes (dark) ─────────────────────────────────────────────────────── */
+[data-palette='teal'] {
+  --accent: #5ba3a8;
+  --accent-dim: #4a8a8e;
+  --accent-muted: #3a7276;
+}
+[data-palette='indigo'] {
+  --accent: #8b9cf9;
+  --accent-dim: #7280d8;
+  --accent-muted: #5763a8;
+}
+[data-palette='amber'] {
+  --accent: #d9a441;
+  --accent-dim: #b8892f;
+  --accent-muted: #8a6720;
+}
+[data-palette='rose'] {
+  --accent: #d97a9e;
+  --accent-dim: #b85f80;
+  --accent-muted: #8e4862;
+}
+[data-palette='green'] {
+  --accent: #5aab6e;
+  --accent-dim: #48935a;
+  --accent-muted: #376f44;
+}
+
+/* ── Palettes (light) ────────────────────────────────────────────────────── */
+html.light[data-palette='teal'] {
+  --accent: #2a7a7e;
+  --accent-dim: #1a6a6e;
+  --accent-muted: #1a5a5e;
+}
+html.light[data-palette='indigo'] {
+  --accent: #3a4ac8;
+  --accent-dim: #2e3aa0;
+  --accent-muted: #232e78;
+}
+html.light[data-palette='amber'] {
+  --accent: #8a6420;
+  --accent-dim: #745318;
+  --accent-muted: #5c4210;
+}
+html.light[data-palette='rose'] {
+  --accent: #b04a72;
+  --accent-dim: #94385c;
+  --accent-muted: #782c4a;
+}
+html.light[data-palette='green'] {
+  --accent: #2e7a44;
+  --accent-dim: #246236;
+  --accent-muted: #1a4a28;
+}
+
+/* ── Accessibility: high contrast (WCAG AAA) ─────────────────────────────── */
+html[data-contrast='high'] {
+  --color-text-dim: #94a8bc;
+  --color-text-muted: #c0d0e0;
+  --color-text-base: #e0e8f0;
+  --color-text-bright: #f0f4fa;
+  --color-text-head: #ffffff;
+  --color-border: #506070;
+}
+
+html.light[data-contrast='high'] {
+  --color-text-dim: #2a3448;
+  --color-text-muted: #0a1428;
+  --color-text-base: #000810;
+  --color-text-bright: #000408;
+  --color-text-head: #000204;
+  --color-border: #4a5a6e;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-text-dim: #94a8bc;
+    --color-text-muted: #c0d0e0;
+    --color-text-base: #e0e8f0;
+    --color-text-bright: #f0f4fa;
+    --color-text-head: #ffffff;
+    --color-border: #506070;
+  }
+}

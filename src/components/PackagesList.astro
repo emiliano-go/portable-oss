@@ -1,0 +1,52 @@
+---
+import type { ResolvedProject } from '../lib/config';
+
+export interface Props {
+  project: ResolvedProject;
+}
+
+const { project } = Astro.props;
+---
+
+<div class="grid gap-3 sm:grid-cols-2">
+  {project.packages.map((pkg) => (
+    <div class="border border-(--color-border-subtle) bg-(--color-surface) p-4" style="border-radius: var(--radius)">
+      <div class="flex items-center justify-between gap-2">
+        <a
+          href={pkg.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="truncate font-[family-name:var(--font-mono)] text-[12px] text-(--color-text-bright) hover:text-(--color-accent)"
+        >
+          {pkg.name} ↗
+        </a>
+        <span class="shrink-0 font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.08em] text-(--color-text-dim)">
+          {pkg.registry}
+        </span>
+      </div>
+
+      {pkg.description && <p class="mt-2 text-[11px] leading-relaxed text-(--color-text-muted)">{pkg.description}</p>}
+
+      <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+        {pkg.show.includes('version') && (
+          <span class="inline-flex items-baseline gap-1.5">
+            <span class="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.08em] text-(--color-text-dim)">version</span>
+            <span
+              class="live font-[family-name:var(--font-mono)] text-[11px] text-(--color-text-base)"
+              data-live={`project.${project.key}.packages.${pkg.id}.version`}
+              data-live-fallback="—">—</span>
+          </span>
+        )}
+        {pkg.show.includes('downloads') && (
+          <span class="inline-flex items-baseline gap-1.5">
+            <span class="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.08em] text-(--color-text-dim)">downloads</span>
+            <span
+              class="live font-[family-name:var(--font-mono)] text-[11px] text-(--color-text-base)"
+              data-live={`project.${project.key}.packages.${pkg.id}.downloads`}
+              data-live-fallback="—">—</span>
+          </span>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
